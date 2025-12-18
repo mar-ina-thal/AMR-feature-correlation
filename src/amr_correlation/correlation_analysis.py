@@ -64,11 +64,16 @@ class CorrelationAnalyzer:
         
         for feat1 in features1:
             for feat2 in features2:
-                corr, _ = stats.pearsonr(
-                    data1_aligned[feat1].dropna(),
-                    data2_aligned[feat2].dropna()
-                )
-                correlation_matrix.loc[feat1, feat2] = corr
+                # Create mask for valid (non-NaN) values in both features
+                valid_mask = ~(data1_aligned[feat1].isna() | data2_aligned[feat2].isna())
+                x = data1_aligned.loc[valid_mask, feat1]
+                y = data2_aligned.loc[valid_mask, feat2]
+                
+                if len(x) > 0:
+                    corr, _ = stats.pearsonr(x, y)
+                    correlation_matrix.loc[feat1, feat2] = corr
+                else:
+                    correlation_matrix.loc[feat1, feat2] = np.nan
         
         self.correlation_results['pearson'] = correlation_matrix
         return correlation_matrix
@@ -118,11 +123,16 @@ class CorrelationAnalyzer:
         
         for feat1 in features1:
             for feat2 in features2:
-                corr, _ = stats.spearmanr(
-                    data1_aligned[feat1].dropna(),
-                    data2_aligned[feat2].dropna()
-                )
-                correlation_matrix.loc[feat1, feat2] = corr
+                # Create mask for valid (non-NaN) values in both features
+                valid_mask = ~(data1_aligned[feat1].isna() | data2_aligned[feat2].isna())
+                x = data1_aligned.loc[valid_mask, feat1]
+                y = data2_aligned.loc[valid_mask, feat2]
+                
+                if len(x) > 0:
+                    corr, _ = stats.spearmanr(x, y)
+                    correlation_matrix.loc[feat1, feat2] = corr
+                else:
+                    correlation_matrix.loc[feat1, feat2] = np.nan
         
         self.correlation_results['spearman'] = correlation_matrix
         return correlation_matrix
@@ -177,11 +187,16 @@ class CorrelationAnalyzer:
         
         for feat1 in features1:
             for feat2 in features2:
-                _, pval = corr_func(
-                    data1_aligned[feat1].dropna(),
-                    data2_aligned[feat2].dropna()
-                )
-                pvalue_matrix.loc[feat1, feat2] = pval
+                # Create mask for valid (non-NaN) values in both features
+                valid_mask = ~(data1_aligned[feat1].isna() | data2_aligned[feat2].isna())
+                x = data1_aligned.loc[valid_mask, feat1]
+                y = data2_aligned.loc[valid_mask, feat2]
+                
+                if len(x) > 0:
+                    _, pval = corr_func(x, y)
+                    pvalue_matrix.loc[feat1, feat2] = pval
+                else:
+                    pvalue_matrix.loc[feat1, feat2] = np.nan
         
         self.correlation_results[f'{method}_pvalues'] = pvalue_matrix
         return pvalue_matrix

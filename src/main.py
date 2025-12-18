@@ -10,7 +10,8 @@ import argparse
 from pathlib import Path
 import sys
 
-# Add src to path
+# Add src to path for standalone script execution
+# Note: For production use, install the package with 'pip install -e .'
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from amr_correlation import DataLoader, CorrelationAnalyzer, CorrelationVisualizer

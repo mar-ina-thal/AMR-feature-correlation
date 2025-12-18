@@ -40,9 +40,10 @@ setup(
         "seaborn>=0.12.0",
         "openpyxl>=3.0.0",
     ],
-    entry_points={
-        "console_scripts": [
-            "amr-correlate=main:main",
-        ],
-    },
+    # Entry points commented out - use 'python src/main.py' to run
+    # entry_points={
+    #     "console_scripts": [
+    #         "amr-correlate=amr_correlation.main:main",
+    #     ],
+    # },
 )
